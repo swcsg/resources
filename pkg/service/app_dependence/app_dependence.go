@@ -78,6 +78,7 @@ func (d *AppDependence) GetResources(deploymentName, namespace string) (*service
 
 		}
 	}
+	// role，rolebinding 、 sa
 	return res,nil
 
 }
