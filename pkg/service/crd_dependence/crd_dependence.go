@@ -1,6 +1,7 @@
 package crd_dependence
 
 import (
+	"k8s.io/apimachinery/pkg/api/errors"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"resource/pkg/service"
 )
@@ -36,6 +37,9 @@ func (crd *CRDDependence) GetResources(namespace, name string) (*service.ResAppD
 	if err == nil {
 		res.Service = svcList
 	}
+	if err != nil && errors.IsNotFound(err){
+		logger.Infoln("svc is not exist")
+	}
 
 	volumes := sts.Spec.Template.Spec.Volumes
 
@@ -47,12 +51,18 @@ func (crd *CRDDependence) GetResources(namespace, name string) (*service.ResAppD
 			if err == nil {
 				res.Secret = append(res.Secret, secret)
 			}
+			if err != nil && errors.IsNotFound(err){
+				logger.Infoln("secret is not exist")
+			}
 		}
 		// configMap
 		if volume.ConfigMap != nil {
 			configMap, err := crd.ConfigMapClient.Get(namespace, volume.ConfigMap.Name)
 			if err == nil {
 				res.ConfigMap = append(res.ConfigMap, configMap)
+			}
+			if err != nil && errors.IsNotFound(err){
+				logger.Infoln("configmap is not exist")
 			}
 		}
 	}
@@ -72,11 +82,17 @@ func (crd *CRDDependence) GetResources(namespace, name string) (*service.ResAppD
 				if err == nil {
 					res.StorageClass = append(res.StorageClass, sc)
 				}
+				if err != nil && errors.IsNotFound(err){
+					logger.Infoln("sc is not exist")
+				}
 			}
 			// pv
 			pv, err := crd.PvClient.Get(pvc.Spec.VolumeName)
 			if err == nil {
 				res.Pv = append(res.Pv, pv)
+			}
+			if err != nil && errors.IsNotFound(err){
+				logger.Infoln("pv is not exist")
 			}
 		}
 	}

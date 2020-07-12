@@ -1,6 +1,7 @@
 package app_dependence
 
 import (
+	"k8s.io/apimachinery/pkg/api/errors"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"resource/pkg/service"
 )
@@ -37,6 +38,9 @@ func (d *AppDependence) GetResources(deploymentName, namespace string) (*service
 	if err == nil {
 		res.Service = svcList
 	}
+	if err != nil && errors.IsNotFound(err){
+		logger.Infoln("svc is not exist")
+	}
 
 	volumes := dp.Spec.Template.Spec.Volumes
 
@@ -47,6 +51,9 @@ func (d *AppDependence) GetResources(deploymentName, namespace string) (*service
 			if err == nil {
 				res.Secret = append(res.Secret,secret)
 			}
+			if err != nil && errors.IsNotFound(err){
+				logger.Infoln("secret is not exist")
+			}
 		}
 		// configMap
 		if volume.ConfigMap != nil {
@@ -54,12 +61,16 @@ func (d *AppDependence) GetResources(deploymentName, namespace string) (*service
 			if err == nil {
 				res.ConfigMap = append(res.ConfigMap,configMap)
 			}
+			if err != nil && errors.IsNotFound(err){
+				logger.Infoln("configmap is not exist")
+			}
 		}
 		// pvc
 		if volume.PersistentVolumeClaim != nil {
 			pvc, err := d.PvcClient.Get(namespace, volume.PersistentVolumeClaim.ClaimName)
 			if err != nil {
 				// pvc 不存在，pv，sc 无意义
+				logger.Infoln("pvc is not exist")
 				continue
 			}
 			res.Pvc = append(res.Pvc,pvc)
@@ -69,11 +80,17 @@ func (d *AppDependence) GetResources(deploymentName, namespace string) (*service
 				if err == nil {
 					res.StorageClass = append(res.StorageClass,sc)
 				}
+				if err != nil && errors.IsNotFound(err){
+					logger.Infoln("sc is not exist")
+				}
 			}
 			// pv
 			pv, err := d.PvClient.Get(pvc.Spec.VolumeName)
 			if err == nil{
 				res.Pv = append(res.Pv,pv)
+			}
+			if err != nil && errors.IsNotFound(err){
+				logger.Infoln("pv is not exist")
 			}
 
 		}
