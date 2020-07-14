@@ -5,8 +5,10 @@ import (
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// SecretClient struct
 type SecretClient struct{}
 
+// Get secret
 func (s *SecretClient) Get(namespace, name string) (*v1.Secret, error) {
 	secret, err := NewKubeClient().CoreV1().Secrets(namespace).Get(name, meta_v1.GetOptions{})
 	if err != nil {

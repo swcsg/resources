@@ -1,14 +1,13 @@
 package service
 
 import (
+	apps_v1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/api/extensions/v1beta1"
 	sc_v1beta1 "k8s.io/api/storage/v1beta1"
-	apps_v1"k8s.io/api/apps/v1"
-
 )
 
-
+// ResAppDependence 请求返回结构体
 type ResAppDependence struct {
 	Deployment   *v1beta1.Deployment
 	StatefulSet  *apps_v1.StatefulSet
@@ -20,4 +19,3 @@ type ResAppDependence struct {
 	Pv           []*v1.PersistentVolume
 	StorageClass []*sc_v1beta1.StorageClass
 }
-

@@ -5,8 +5,10 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// DeploymnetClient struct
 type DeploymnetClient struct{}
 
+// Get get depoyment
 func (d *DeploymnetClient) Get(namespace, deploymentName string) (*v1beta1.Deployment, error) {
 	dp, err := NewKubeClient().ExtensionsV1beta1().Deployments(namespace).Get(deploymentName, v1.GetOptions{})
 	if err != nil {

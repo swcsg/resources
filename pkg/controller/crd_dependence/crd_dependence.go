@@ -1,17 +1,19 @@
 package crd_dependence
 
-
 import (
-	"github.com/gin-gonic/gin"
 	"resource/pkg/service/crd_dependence"
 	"resource/pkg/tools/kubernetes"
+
+	"github.com/gin-gonic/gin"
 )
 
+// CRDDependenceOptions 无状态应用依赖资源请求体
 type CRDDependenceOptions struct {
 	DeploymentName string `json:"deploymentName"`
 	Namespace      string `json:"namespace"`
 }
 
+// CRDDependence 无状态应用依赖资源控制层
 func CRDDependence(c *gin.Context) {
 
 	var options = &CRDDependenceOptions{}
@@ -29,14 +31,14 @@ func CRDDependence(c *gin.Context) {
 		},
 	}
 
-	dc.HttpTool.JsonUnmarshal(c, options)
+	dc.HTTPTool.JSONUnmarshal(c, options)
 	if "" == options.Namespace || "" == options.DeploymentName {
-		dc.HttpTool.WriteErr(c, "参数无效")
+		dc.HTTPTool.WriteErr(c, "参数无效")
 	}
-	rs ,err := dc.CRDDependence.GetResources(options.Namespace, options.DeploymentName)
-	if err != nil{
-		dc.HttpTool.WriteErr(c,err)
-	}else {
-		dc.HttpTool.WriteOk(c,rs)
+	rs, err := dc.CRDDependence.GetResources(options.Namespace, options.DeploymentName)
+	if err != nil {
+		dc.HTTPTool.WriteErr(c, err)
+	} else {
+		dc.HTTPTool.WriteOk(c, rs)
 	}
 }

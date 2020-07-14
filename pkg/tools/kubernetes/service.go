@@ -5,8 +5,10 @@ import (
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// ServiceClient struct
 type ServiceClient struct{}
 
+// List get serviceList by listOptions
 func (s *ServiceClient) List(namespace string, listOptions meta_v1.ListOptions) (*v1.ServiceList, error) {
 	svcList, err := NewKubeClient().CoreV1().Services(namespace).List(listOptions)
 	if err != nil {

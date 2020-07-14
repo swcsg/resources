@@ -2,23 +2,27 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/maxwell92/log"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/maxwell92/log"
 )
 
 var logger = log.Log
 
+// ResData 统一的请求返回结构体
 type ResData struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
 }
 
-type HttpTool struct{}
+//HTTPTool 结构体
+type HTTPTool struct{}
 
-func (h *HttpTool) WriteOk(c *gin.Context, data interface{}) {
+// WriteOk 统一正常返回
+func (h *HTTPTool) WriteOk(c *gin.Context, data interface{}) {
 	res := ResData{
 		Code:    0,
 		Message: "ok",
@@ -27,7 +31,8 @@ func (h *HttpTool) WriteOk(c *gin.Context, data interface{}) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (h *HttpTool) WriteErr(c *gin.Context, err interface{}) {
+// WriteErr 统一错误返回
+func (h *HTTPTool) WriteErr(c *gin.Context, err interface{}) {
 	res := ResData{
 		Code:    1,
 		Message: "find a error",
@@ -36,7 +41,8 @@ func (h *HttpTool) WriteErr(c *gin.Context, err interface{}) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (h *HttpTool) JsonUnmarshal(c *gin.Context, options interface{}) {
+// JSONUnmarshal json序列化
+func (h *HTTPTool) JSONUnmarshal(c *gin.Context, options interface{}) {
 	reqBody, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		logger.Errorf("Tool GetOptionsFromBody ReadAll Error: error=%s, r.Body=%p", err, &c.Request.Body)

@@ -1,11 +1,13 @@
 package crd_dependence
 
 import (
+	"resource/pkg/service"
+
 	"k8s.io/apimachinery/pkg/api/errors"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"resource/pkg/service"
 )
 
+// GetResources 获取无状态应用依赖资源的核心逻辑
 func (crd *CRDDependence) GetResources(namespace, name string) (*service.ResAppDependence, error) {
 
 	var res = &service.ResAppDependence{}
@@ -37,12 +39,11 @@ func (crd *CRDDependence) GetResources(namespace, name string) (*service.ResAppD
 	if err == nil {
 		res.Service = svcList
 	}
-	if err != nil && errors.IsNotFound(err){
+	if err != nil && errors.IsNotFound(err) {
 		logger.Infoln("svc is not exist")
 	}
 
 	volumes := sts.Spec.Template.Spec.Volumes
-
 
 	for _, volume := range volumes { //可能多个资源挂载
 		// secret
@@ -51,7 +52,7 @@ func (crd *CRDDependence) GetResources(namespace, name string) (*service.ResAppD
 			if err == nil {
 				res.Secret = append(res.Secret, secret)
 			}
-			if err != nil && errors.IsNotFound(err){
+			if err != nil && errors.IsNotFound(err) {
 				logger.Infoln("secret is not exist")
 			}
 		}
@@ -61,7 +62,7 @@ func (crd *CRDDependence) GetResources(namespace, name string) (*service.ResAppD
 			if err == nil {
 				res.ConfigMap = append(res.ConfigMap, configMap)
 			}
-			if err != nil && errors.IsNotFound(err){
+			if err != nil && errors.IsNotFound(err) {
 				logger.Infoln("configmap is not exist")
 			}
 		}
@@ -82,7 +83,7 @@ func (crd *CRDDependence) GetResources(namespace, name string) (*service.ResAppD
 				if err == nil {
 					res.StorageClass = append(res.StorageClass, sc)
 				}
-				if err != nil && errors.IsNotFound(err){
+				if err != nil && errors.IsNotFound(err) {
 					logger.Infoln("sc is not exist")
 				}
 			}
@@ -91,7 +92,7 @@ func (crd *CRDDependence) GetResources(namespace, name string) (*service.ResAppD
 			if err == nil {
 				res.Pv = append(res.Pv, pv)
 			}
-			if err != nil && errors.IsNotFound(err){
+			if err != nil && errors.IsNotFound(err) {
 				logger.Infoln("pv is not exist")
 			}
 		}

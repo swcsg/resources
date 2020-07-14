@@ -2,30 +2,29 @@ package kubernetes
 
 import (
 	"flag"
+	"sync"
+
 	"github.com/maxwell92/log"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-	"sync"
 )
 
 var logger = log.Log
 
 var once sync.Once
 
-
-
 var kubeClient *kubernetes.Clientset
 
+// NewKubeClient new kubernetes clientset
 func NewKubeClient() *kubernetes.Clientset {
-	once.Do(func(){
+	once.Do(func() {
 		kubeClient = kubeClientInit()
 	})
 	return kubeClient
 }
 
-
-
-func kubeClientInit() *kubernetes.Clientset{
+// kubeClientInit clientset init , return a kubernetes clientset
+func kubeClientInit() *kubernetes.Clientset {
 
 	kubeconfig := flag.String("kubeconfig", "/root/.kube/config", "absolute path to the kubeconfig file")
 
@@ -39,9 +38,4 @@ func kubeClientInit() *kubernetes.Clientset{
 		panic(err.Error())
 	}
 	return clientset
-
 }
-
-
-
-

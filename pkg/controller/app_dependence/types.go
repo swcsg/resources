@@ -5,7 +5,8 @@ import (
 	"resource/pkg/types"
 )
 
+// AppDependenceController 有状态应用依赖资源接口封装
 type AppDependenceController struct {
-	HttpTool      *http.HttpTool
+	HTTPTool      *http.HTTPTool
 	AppDependence types.AppDependence
 }

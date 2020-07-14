@@ -1,16 +1,19 @@
 package app_dependence
 
 import (
-	"github.com/gin-gonic/gin"
 	"resource/pkg/service/app_dependence"
 	"resource/pkg/tools/kubernetes"
+
+	"github.com/gin-gonic/gin"
 )
 
+// AppDependenceOptions 有状态应用依赖资源请求结构体
 type AppDependenceOptions struct {
 	DeploymentName string `json:"deploymentName"`
 	Namespace      string `json:"namespace"`
 }
 
+// AppDependence 无状态应用应用依赖资源控制层
 func AppDependence(c *gin.Context) {
 
 	var options = &AppDependenceOptions{}
@@ -28,16 +31,15 @@ func AppDependence(c *gin.Context) {
 		},
 	}
 
-	dc.HttpTool.JsonUnmarshal(c, options)
+	dc.HTTPTool.JSONUnmarshal(c, options)
 	if "" == options.Namespace || "" == options.DeploymentName {
-		dc.HttpTool.WriteErr(c, "参数无效")
+		dc.HTTPTool.WriteErr(c, "Invalid argument")
 	}
-	rs ,err := dc.AppDependence.GetResources(options.DeploymentName, options.Namespace)
-	if err != nil{
-		dc.HttpTool.WriteErr(c,err)
-	}else {
-		dc.HttpTool.WriteOk(c,rs)
+	rs, err := dc.AppDependence.GetResources(options.DeploymentName, options.Namespace)
+	if err != nil {
+		dc.HTTPTool.WriteErr(c, err)
+	} else {
+		dc.HTTPTool.WriteOk(c, rs)
 	}
-
 
 }
