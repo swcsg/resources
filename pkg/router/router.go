@@ -3,6 +3,7 @@ package router
 import (
 	"resource/pkg/controller/app_dependence"
 	"resource/pkg/controller/crd_dependence"
+	"resource/pkg/controller/healthz"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +17,8 @@ func RegisterRoutes() *gin.Engine {
 	{
 		r.POST("/deployment/dependence", app_dependence.AppDependence)
 		r.POST("/statefulset/dependence", crd_dependence.CRDDependence)
+		r.GET("/healthz", healthz.Healthz)
 	}
+
 	return router
 }

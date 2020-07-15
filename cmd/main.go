@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/maxwell92/log"
 	"resource/pkg/router"
+
+	"github.com/maxwell92/log"
 )
 
 var logger = log.Log
@@ -12,5 +13,5 @@ func main() {
 
 	r := router.RegisterRoutes()
 
-	_ = r.Run("localhost:8090")
+	_ = r.Run("localhost:8080")
 }

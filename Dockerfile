@@ -1,5 +1,7 @@
 FROM alpine:latest
 
-ADD main /main
+ADD main /
+
+EXPOSE 8080
 
 ENTRYPOINT ["/main"]
